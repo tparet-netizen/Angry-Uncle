@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Angry Uncle</title>
+<meta name="description" content="Tap the boxes one at a time. Don't wake the angry uncle." />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👴</text></svg>" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <h1><span class="title-emoji">👴</span> Angry Uncle</h1>
+      <p class="subtitle">Tap a box. One of them is <em>not happy</em>.</p>
+    </header>
+
+    <section class="controls">
+      <label class="control">
+        Grid size
+        <select id="sizeSelect">
+          <option value="9">3 × 3</option>
+          <option value="16" selected>4 × 4</option>
+          <option value="25">5 × 5</option>
+          <option value="36">6 × 6</option>
+          <option value="64">8 × 8</option>
+        </select>
+      </label>
+      <button id="newGameBtn" class="btn primary">New Game</button>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <span class="stat-label">Safe taps</span>
+        <span class="stat-value" id="scoreValue">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Best</span>
+        <span class="stat-value" id="bestValue">0</span>
+      </div>
+    </section>
+
+    <main id="grid" class="grid" aria-live="polite"></main>
+
+    <div id="overlay" class="overlay hidden">
+      <div class="overlay-card">
+        <p id="overlayEmoji" class="overlay-emoji">😡</p>
+        <h2 id="overlayTitle">You woke him up!</h2>
+        <p id="overlayText">You survived 0 taps this round.</p>
+        <button id="playAgainBtn" class="btn primary">Play Again</button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Made for fun — no relation to any real, easily-angered uncles.</p>
+    </footer>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
