@@ -1,6 +1,29 @@
-(() => {
+(async () => {
   const CALM_FACES = ['🙂', '😌', '😎', '🤓', '😏', '🧐', '🥸', '😴', '🙃', '😇'];
   const ANGRY_FACE = '😡';
+
+  // Drop a photo at assets/angry-uncle.{jpg,jpeg,png,webp} to use it instead
+  // of the emoji — see assets/README.md. Falls back to the emoji if none exists.
+  const ANGRY_PHOTO_CANDIDATES = [
+    'assets/angry-uncle.jpg',
+    'assets/angry-uncle.jpeg',
+    'assets/angry-uncle.png',
+    'assets/angry-uncle.webp',
+  ];
+
+  async function resolveAngryPhoto() {
+    for (const path of ANGRY_PHOTO_CANDIDATES) {
+      try {
+        const res = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+        if (res.ok) return path;
+      } catch {
+        // ignore and try the next candidate
+      }
+    }
+    return null;
+  }
+
+  const angryPhotoUrl = await resolveAngryPhoto();
 
   const grid = document.getElementById('grid');
   const sizeSelect = document.getElementById('sizeSelect');
@@ -67,7 +90,16 @@
       box.setAttribute('aria-label', 'Hidden box');
       const face = document.createElement('span');
       face.className = 'face';
-      face.textContent = i === angryIndex ? ANGRY_FACE : randomCalmFace();
+      if (i === angryIndex && angryPhotoUrl) {
+        const img = document.createElement('img');
+        img.className = 'uncle-photo';
+        img.src = angryPhotoUrl;
+        img.alt = 'Angry uncle';
+        img.draggable = false;
+        face.appendChild(img);
+      } else {
+        face.textContent = i === angryIndex ? ANGRY_FACE : randomCalmFace();
+      }
       box.appendChild(face);
       box.addEventListener('click', () => handleTap(box, i));
       grid.appendChild(box);
@@ -112,7 +144,16 @@
       overlayTitle.textContent = 'You cleared the grid!';
       overlayText.textContent = `You safely tapped all ${safeTotal} boxes and dodged the angry uncle.`;
     } else {
-      overlayEmoji.textContent = ANGRY_FACE;
+      overlayEmoji.innerHTML = '';
+      if (angryPhotoUrl) {
+        const img = document.createElement('img');
+        img.className = 'uncle-photo overlay-photo';
+        img.src = angryPhotoUrl;
+        img.alt = 'Angry uncle';
+        overlayEmoji.appendChild(img);
+      } else {
+        overlayEmoji.textContent = ANGRY_FACE;
+      }
       overlayTitle.textContent = 'You woke him up!';
       overlayText.textContent = `You survived ${revealedCount} safe tap${revealedCount === 1 ? '' : 's'} this round.`;
       if (navigator.vibrate) navigator.vibrate(200);
