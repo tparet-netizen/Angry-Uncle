@@ -35,6 +35,7 @@
   const overlayEmoji = document.getElementById('overlayEmoji');
   const overlayTitle = document.getElementById('overlayTitle');
   const overlayText = document.getElementById('overlayText');
+  const muteBtn = document.getElementById('muteBtn');
 
   const BEST_KEY = 'angryUncle.bestBySize';
 
@@ -115,9 +116,11 @@
 
     if (index === angryIndex) {
       box.classList.add('revealed', 'angry');
+      window.UncleSounds?.playAngryTone();
       endGame(false);
     } else {
       box.classList.add('revealed', 'safe');
+      window.UncleSounds?.playSafeTone();
       revealedCount++;
       scoreValue.textContent = String(revealedCount);
       if (revealedCount >= safeTotal) {
@@ -162,9 +165,20 @@
     setTimeout(() => overlay.classList.remove('hidden'), 350);
   }
 
+  function updateMuteBtn() {
+    const isMuted = window.UncleSounds?.isMuted();
+    muteBtn.textContent = isMuted ? '🔇' : '🔊';
+    muteBtn.setAttribute('aria-label', isMuted ? 'Unmute sound' : 'Mute sound');
+  }
+
   newGameBtn.addEventListener('click', () => newGame(parseInt(sizeSelect.value, 10)));
   playAgainBtn.addEventListener('click', () => newGame(currentSize));
   sizeSelect.addEventListener('change', () => newGame(parseInt(sizeSelect.value, 10)));
+  muteBtn.addEventListener('click', () => {
+    window.UncleSounds?.toggleMuted();
+    updateMuteBtn();
+  });
 
+  updateMuteBtn();
   newGame(currentSize);
 })();
