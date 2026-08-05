@@ -162,6 +162,19 @@ select {
   background: var(--primary-hover);
 }
 
+.btn.icon-btn {
+  padding: 9px 12px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.btn.icon-btn:hover {
+  border-color: var(--primary);
+}
+
 .stats {
   display: flex;
   gap: 24px;
